@@ -24,8 +24,38 @@ struct ListofListsView: View {
     
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(lists) { list in
+            ListofLists(lists: $lists, showAlert: $showAlert, alertTitle: $alertTitle, alertMessage: $alertMessage)
+            .alert(isPresented: $showAlert) { GetAlert() }
+            
+            .navigationTitle("Lists")
+        }
+    }
+}
+
+extension ListofListsView {
+    func GetAlert() -> Alert {
+        Alert(
+            title: Text(alertTitle),
+            message: Text(alertMessage),
+            primaryButton: .cancel(),
+            secondaryButton: .destructive(Text("DELETE")),
+        )
+    }
+}
+
+struct ListofLists: View {
+    
+    @Binding var lists: [ListModel]
+    @Binding var showAlert: Bool
+    @Binding var alertTitle: String
+    @Binding var alertMessage: String
+    
+    var body: some View {
+        List {
+            ForEach(lists) { list in
+                NavigationLink {
+                    ListView()
+                } label: {
                     HStack {
                         Text(list.name)
                         Spacer()
@@ -39,42 +69,32 @@ struct ListofListsView: View {
 
                         } label: {
                             Image(systemName: "ellipsis")
+                                .padding(5)
                         }
                         .tint(.primary)
                     }
                 }
-                .onMove(perform: moveItem)
             }
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Image(systemName: "plus")
-                        .onTapGesture {
-                            print("SUCCESS")
-                        }
-                }
-                
-                ToolbarItem(placement: .topBarLeading) {
-                    EditButton()
-                }
-            }
-            .alert(isPresented: $showAlert) { GetAlert() }
-            
-            .navigationTitle("Lists")
+            .onMove(perform: moveItem)
         }
-    }
-    
-    func GetAlert() -> Alert {
-        Alert(
-            title: Text(alertTitle),
-            message: Text(alertMessage),
-            primaryButton: .cancel(),
-            secondaryButton: .destructive(Text("DELETE")),
-        )
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Image(systemName: "plus")
+                    .onTapGesture {
+                        print("SUCCESS")
+                    }
+            }
+            
+            ToolbarItem(placement: .topBarLeading) {
+                EditButton()
+            }
+        }
     }
     
     func moveItem(from source: IndexSet, to destination: Int) {
         lists.move(fromOffsets: source, toOffset: destination)
     }
+    
 }
 
 #Preview {

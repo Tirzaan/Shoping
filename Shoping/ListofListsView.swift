@@ -21,10 +21,15 @@ struct ListofListsView: View {
     @State var showAlert: Bool = false
     @State var alertTitle: String = "Empty Alert"
     @State var alertMessage: String = ""
+    @State var selectedList: ListModel = ListModel(name: "", groups: [])
+    
+    init() {
+        selectedList = lists.first ?? ListModel(name: "", groups: [])
+    }
     
     var body: some View {
         NavigationStack {
-            ListofLists(lists: $lists, showAlert: $showAlert, alertTitle: $alertTitle, alertMessage: $alertMessage)
+            ListofLists(lists: $lists, showAlert: $showAlert, alertTitle: $alertTitle, alertMessage: $alertMessage, selectedList: $selectedList)
             .alert(isPresented: $showAlert) { GetAlert() }
             
             .navigationTitle("Lists")
@@ -38,7 +43,9 @@ extension ListofListsView {
             title: Text(alertTitle),
             message: Text(alertMessage),
             primaryButton: .cancel(),
-            secondaryButton: .destructive(Text("DELETE")),
+            secondaryButton: .destructive(Text("DELETE")) {
+                lists.removeAll(where: { $0.name == selectedList.name })
+            },
         )
     }
 }
@@ -49,6 +56,8 @@ struct ListofLists: View {
     @Binding var showAlert: Bool
     @Binding var alertTitle: String
     @Binding var alertMessage: String
+    
+    @Binding var selectedList: ListModel
     
     var body: some View {
         List {
@@ -62,9 +71,7 @@ struct ListofLists: View {
                         Menu {
                             NavigationLink("Edit") { Text("Editing '\(list.name)'") }
                             Button("Delete") {
-                                alertTitle = "Are You Sure You Want To Delete '\(list.name)' List?"
-                                alertMessage = "By clicking delete, this list will be permanently removed."
-                                showAlert.toggle()
+                                deleteButton(list: list)
                             }
 
                         } label: {
@@ -79,10 +86,11 @@ struct ListofLists: View {
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Image(systemName: "plus")
-                    .onTapGesture {
-                        print("SUCCESS")
-                    }
+                NavigationLink {
+                    AddListView()
+                } label: {
+                    Image(systemName: "plus")
+                }
             }
             
             ToolbarItem(placement: .topBarLeading) {
@@ -93,6 +101,13 @@ struct ListofLists: View {
     
     func moveItem(from source: IndexSet, to destination: Int) {
         lists.move(fromOffsets: source, toOffset: destination)
+    }
+    
+    func deleteButton(list: ListModel) {
+        alertTitle = "Are You Sure You Want To Delete '\(list.name)' List?"
+        alertMessage = "By clicking delete, this list will be permanently removed."
+        selectedList = lists.first(where: { $0.name == list.name }) ?? ListModel(name: "", groups: [])
+        showAlert.toggle()
     }
     
 }

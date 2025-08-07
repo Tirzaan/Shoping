@@ -9,7 +9,9 @@ import SwiftUI
 
 struct AddListView: View {
     
-    @State var selectedList: ListModel = ListModel(name: "", groups: [
+    @State var lists: [ListModel] = []
+    
+    @State var newList: ListModel = ListModel(name: "", groups: [
         GroupModel(name: "A", order: 0, items: []),
         GroupModel(name: "B", order: 1, items: [])
     ])
@@ -19,9 +21,9 @@ struct AddListView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                TextField("name", text: $nameInput)
-                
                 List {
+                    TextField("name", text: $nameInput)
+                    
                     Section(header:
                                 HStack {
                         Text("Groups")
@@ -36,17 +38,39 @@ struct AddListView: View {
                         .padding(.vertical, 2)
                         .frame(maxWidth: .infinity)
                     ) {
-                        ForEach(selectedList.groups.indices, id: \.self) { groupIndex in
-                            Text(selectedList.groups[groupIndex].name)
+                        ForEach(newList.groups.indices, id: \.self) { groupIndex in
+                            Text(newList.groups[groupIndex].name)
                         }
+                        .onDelete { IndexSet in }
                     }
                 }
                 .listStyle(.grouped)
                 
-                .navigationTitle("Add List")
+                Button {
+                    Save()
+                } label: {
+                    Text("Save")
+                        .foregroundStyle(.white)
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .padding()
+                        .padding(.horizontal)
+                        .background(.blue)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+                
             }
+            .navigationTitle("Add List")
         }
     }
+}
+
+extension AddListView {
+    
+    func Save() {
+        lists.append(newList)
+    }
+    
 }
 
 struct AddGroupView: View {

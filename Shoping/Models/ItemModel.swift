@@ -8,7 +8,12 @@
 import Foundation
 
 struct ItemModel: Identifiable {
-    let id: String = UUID().uuidString
     var name: String
     var order: Int
+    
+    var id: String {
+        var idString = UUID().uuidString
+        idString = idString + name + "\(order)"
+        return idString
+    }
 }

@@ -28,7 +28,7 @@ struct AddGroupView: View {
                             .font(.title2)
                         Spacer()
                         NavigationLink {
-                            AddItemView()
+                            AddItemView(newGroup: newGroup)
                         } label: {
                             Image(systemName: "plus")
                         }

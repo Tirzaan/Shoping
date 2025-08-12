@@ -21,7 +21,8 @@ class ShopingViewModel: ObservableObject {
     
     @Published var currentList: ListModel = ListModel(name: "", groups: [])
     
-    @Published var isEditing: Bool = false
+    @Published var isEditingList: Bool = false
+    @Published var isEditingGroup: Bool = false
     
     var currentGroup: GroupModel = GroupModel(name: "", order: 0, items: [], currentItems: [])
     
@@ -58,6 +59,7 @@ class ShopingViewModel: ObservableObject {
     
     func addGroup(group: GroupModel) {
         let newGroup: GroupModel = group
+        currentList.groups.removeAll(where: { $0.id == currentGroup.id })
         currentList.groups.append(newGroup)
         organizeGroups()
     }

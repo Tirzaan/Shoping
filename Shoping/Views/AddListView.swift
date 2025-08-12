@@ -52,7 +52,11 @@ struct AddListView: View {
                     ) {
                         ForEach(viewModel.currentList.groups) { group in
                             Button {
-                                
+                                viewModel.currentGroup = group
+                                viewModel.isEditingGroup = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01, execute: {
+                                    navigateToAddGroup = true
+                                })
                             } label: {
                                 HStack {
                                     Text(group.name)
@@ -69,7 +73,7 @@ struct AddListView: View {
                 Button {
                     Save()
                 } label: {
-                    Text(viewModel.isEditing ? "Update" :"Save")
+                    Text(viewModel.isEditingList ? "Update" :"Save")
                         .foregroundStyle(.white)
                         .font(.headline)
                         .fontWeight(.semibold)
@@ -81,7 +85,7 @@ struct AddListView: View {
                 
             }
             .alert(isPresented: $showAlert) { GetAlert() }
-            .navigationTitle(viewModel.isEditing ? "Edit List" :"Add List")
+            .navigationTitle(viewModel.isEditingList ? "Edit List" :"Add List")
         }
     }
 }

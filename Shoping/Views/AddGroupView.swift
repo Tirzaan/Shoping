@@ -54,7 +54,7 @@ struct AddGroupView: View {
                 Button {
                     Save()
                 } label: {
-                    Text("Save")
+                    Text(viewModel.isEditingGroup ? "Update" : "Save")
                         .foregroundStyle(.white)
                         .font(.headline)
                         .fontWeight(.semibold)
@@ -65,7 +65,7 @@ struct AddGroupView: View {
                 }
             }
             
-            .navigationTitle("Add Group")
+            .navigationTitle(viewModel.isEditingGroup ? "Edit Group" : "Add Group")
         }
         .listStyle(.grouped)
     }

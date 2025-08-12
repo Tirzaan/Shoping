@@ -46,7 +46,7 @@ extension ListofListsView {
                         Spacer()
                         Menu {
                             Button("Edit") {
-                                viewModel.isEditing = true
+                                viewModel.isEditingList = true
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.01, execute: {
                                     navigateToNewList = true
                                 })
@@ -64,6 +64,10 @@ extension ListofListsView {
                 }
             }
             .onMove(perform: moveItem)
+        }
+        .onAppear {
+            viewModel.isEditingList = false
+            viewModel.isEditingGroup = false
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

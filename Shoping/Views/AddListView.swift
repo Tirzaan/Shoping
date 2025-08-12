@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AddListView: View {
     
-    @State var lists: [ListModel] = []
+    @StateObject var viewModel = ShopingViewModel()
     
     @State var newList: ListModel = ListModel(name: "", groups: [
         GroupModel(name: "A", order: 0, items: []),
@@ -68,7 +68,7 @@ struct AddListView: View {
 extension AddListView {
     
     func Save() {
-        lists.append(newList)
+        viewModel.lists.append(newList)
     }
     
 }

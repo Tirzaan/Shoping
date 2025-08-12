@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ListView: View {
     
+    @StateObject var viewModel = ShopingViewModel()
+    
     @State var list: ListModel = ListModel(
         name: "To Do",
         groups: [

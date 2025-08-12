@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ListofListsView: View {
-    
+    //MARK: VARIABLES
     @EnvironmentObject var viewModel: ShopingViewModel
     
     @State var showAlert: Bool = false
@@ -22,13 +22,16 @@ struct ListofListsView: View {
     var body: some View {
         NavigationStack {
             listofLists
-            NavigationLink("", destination: ListView(list: viewModel.currentList), isActive: $navigateToList).hidden()
+            NavigationLink("", destination: ListView(), isActive: $navigateToList).hidden()
             NavigationLink("", destination: AddListView(), isActive: $navigateToNewList).hidden()
             .alert(isPresented: $showAlert) { GetAlert() }
             .navigationTitle("Lists")
         }
     }
-    
+}
+
+//MARK: VIEWS
+extension ListofListsView {
     var listofLists: some View {
         List {
             ForEach(viewModel.lists) { list in
@@ -44,7 +47,9 @@ struct ListofListsView: View {
                         Menu {
                             Button("Edit") {
                                 viewModel.isEditing = true
-                                navigateToNewList = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01, execute: {
+                                    navigateToNewList = true
+                                })
                             }
                             Button("Delete") {
                                 deleteItemAlert(list: list)
@@ -79,6 +84,9 @@ struct ListofListsView: View {
     }
 }
 
+
+
+//MARK: FUCTIONS
 extension ListofListsView {
     func GetAlert() -> Alert {
         Alert(
@@ -109,6 +117,8 @@ extension ListofListsView {
     }
 }
 
+
+//MARK: PREVIEW
 #Preview {
     ListofListsView()
         .environmentObject(ShopingViewModel())

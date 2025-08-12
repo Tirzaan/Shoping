@@ -12,8 +12,8 @@ struct AddListView: View {
     @StateObject var viewModel = ShopingViewModel()
     
     @State var newList: ListModel = ListModel(name: "", groups: [
-        GroupModel(name: "A", order: 0, items: []),
-        GroupModel(name: "B", order: 1, items: [])
+        GroupModel(name: "A", order: 0, items: [], currentItems: []),
+        GroupModel(name: "B", order: 1, items: [], currentItems: [])
     ])
     
     @State var nameInput: String = ""
@@ -38,8 +38,8 @@ struct AddListView: View {
                         .padding(.vertical, 2)
                         .frame(maxWidth: .infinity)
                     ) {
-                        ForEach(newList.groups.indices, id: \.self) { groupIndex in
-                            Text(newList.groups[groupIndex].name)
+                        ForEach(newList.groups) { group in
+                            Text(group.name)
                         }
                         .onDelete { IndexSet in }
                     }
@@ -73,14 +73,7 @@ extension AddListView {
     
 }
 
-struct AddGroupView: View {
-    
-    @State var name: String = ""
-    
-    var body: some View {
-        TextField("name", text: $name)
-    }
-}
+
 
 #Preview {
     AddListView()

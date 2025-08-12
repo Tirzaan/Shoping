@@ -26,7 +26,7 @@ struct ListofListsView: View {
     @State var selectedList: ListModel = ListModel(name: "", groups: [])
     
     init() {
-        selectedList = viewModel.lists.first ?? ListModel(name: "", groups: [])
+        selectedList = viewModel.currentList ?? ListModel(name: "", groups: [])
     }
     
     var body: some View {
@@ -62,11 +62,16 @@ struct ListofLists: View {
     
     @Binding var selectedList: ListModel
     
+    @State var navigate: Bool = false
+    
     var body: some View {
         List {
             ForEach(viewModel.lists) { list in
-                NavigationLink {
-                    ListView()
+                Button {
+                    viewModel.currentList = list
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01, execute: {
+                        navigate = true
+                    })
                 } label: {
                     HStack {
                         Text(list.name)
@@ -74,7 +79,7 @@ struct ListofLists: View {
                         Menu {
                             NavigationLink("Edit") { Text("Editing '\(list.name)'") }
                             Button("Delete") {
-                                deleteButton(list: list)
+                                deleteItem(list: list)
                             }
 
                         } label: {
@@ -100,13 +105,14 @@ struct ListofLists: View {
                 EditButton()
             }
         }
+        NavigationLink("", destination: ListView(list: viewModel.currentList ?? ListModel(name: "", groups: [])), isActive: $navigate).hidden()
     }
     
     func moveItem(from source: IndexSet, to destination: Int) {
         viewModel.lists.move(fromOffsets: source, toOffset: destination)
     }
     
-    func deleteButton(list: ListModel) {
+    func deleteItem(list: ListModel) {
         alertTitle = "Are You Sure You Want To Delete '\(list.name)' List?"
         alertMessage = "By clicking delete, this list will be permanently removed."
         selectedList = viewModel.lists.first(where: { $0.name == list.name }) ?? ListModel(name: "", groups: [])

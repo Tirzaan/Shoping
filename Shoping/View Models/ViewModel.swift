@@ -10,12 +10,15 @@ import Foundation
 class ShopingViewModel: ObservableObject {
     
     @Published var lists: [ListModel] = [
-        ListModel(name: "To Do", groups: [GroupModel(name: "", order: 0, items: [])]),
+        ListModel(name: "To Do", groups: [GroupModel(name: "", order: 0, items: [], currentItems: [])]),
         ListModel(name: "Grossery", groups: [
-            GroupModel(name: "Veggies", order: 1, items: []),
-            GroupModel(name: "Meat", order: 2, items: [])
+            GroupModel(name: "Veggies", order: 1, items: [], currentItems: []),
+            GroupModel(name: "tytyt", order: 1, items: [], currentItems: []),
+            GroupModel(name: "Meat", order: 2, items: [], currentItems: [])
         ]),
-        ListModel(name: "Winco", groups: [GroupModel(name: "", order: 0, items: [])])
+        ListModel(name: "Winco", groups: [GroupModel(name: "", order: 0, items: [], currentItems: [])])
     ]
+    
+    @Published var currentList: ListModel? = nil
     
 }

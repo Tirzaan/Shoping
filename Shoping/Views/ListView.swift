@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ListView: View {
     
-    @StateObject var viewModel = ShopingViewModel()
+    @EnvironmentObject var viewModel: ShopingViewModel
     
     @State var list: ListModel
     
@@ -37,4 +37,5 @@ struct ListView: View {
 
 #Preview {
     ListView(list: ListModel(name: "www", groups: []))
+        .environmentObject(ShopingViewModel())
 }

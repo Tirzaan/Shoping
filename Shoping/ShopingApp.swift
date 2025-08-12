@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct ShopingApp: App {
+    
+    @StateObject var viewModel = ShopingViewModel()
+    
     var body: some Scene {
         WindowGroup {
             ListofListsView()
+                .environmentObject(viewModel)
         }
     }
 }

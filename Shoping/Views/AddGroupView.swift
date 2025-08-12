@@ -16,7 +16,7 @@ struct AddGroupView: View {
     @State var orderString: String = ""
     @State var order: Int = 0
     
-    @State var newGroup: GroupModel = GroupModel(name: "", order: 0, items: [], currentItems: [])
+//    @State var newGroup: GroupModel = GroupModel(name: "", order: 0, items: [], currentItems: [])
     
     var body: some View {
         NavigationStack {
@@ -29,7 +29,7 @@ struct AddGroupView: View {
                             .font(.title2)
                         Spacer()
                         NavigationLink {
-                            AddItemView(newGroup: newGroup)
+                            AddItemView()
                         } label: {
                             Image(systemName: "plus")
                         }
@@ -37,7 +37,7 @@ struct AddGroupView: View {
                         .padding(.vertical, 2)
                         .frame(maxWidth: .infinity)
                     ) {
-                        ForEach(newGroup.items) { item in
+                        ForEach(viewModel.currentGroup.items) { item in
                             Text(item.name)
                         }
                     }
@@ -73,8 +73,8 @@ struct AddGroupView: View {
 
 extension AddGroupView {
     func Save() {
-        newGroup.name = name
-        viewModel.addGroup(group: newGroup)
+        viewModel.currentGroup.name = name
+        viewModel.addGroup(group: viewModel.currentGroup)
         presentationMode.wrappedValue.dismiss()
     }
 }

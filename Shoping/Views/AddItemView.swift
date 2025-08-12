@@ -16,7 +16,7 @@ struct AddItemView: View {
     @State var orderString: String = ""
     @State var order: Int = 0
     
-    @State var newGroup: GroupModel
+//    @State var newGroup: GroupModel
     @State var newItem: ItemModel = ItemModel(name: "", order: 0)
     
     var body: some View {
@@ -56,12 +56,12 @@ struct AddItemView: View {
 extension AddItemView {
     func Save() {
         newItem.name = name
-        viewModel.addItem(group: newGroup, item: newItem)
+        viewModel.addItem(group: viewModel.currentGroup, item: newItem)
         presentationMode.wrappedValue.dismiss()
     }
 }
 
 #Preview {
-    AddItemView(newGroup: GroupModel(name: "", order: 0, items: [], currentItems: []))
+    AddItemView()
         .environmentObject(ShopingViewModel())
 }

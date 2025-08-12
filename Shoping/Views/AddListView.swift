@@ -24,8 +24,11 @@ struct AddListView: View {
     @State var alertMessage: String = ""
     @State var showAlert: Bool = false
     
+    @State var navigateToAddGroup: Bool = false
+    
     var body: some View {
         NavigationStack {
+            NavigationLink("", destination: AddGroupView(), isActive: $navigateToAddGroup).hidden()
             VStack {
                 List {
                     TextField("name", text: $nameInput)
@@ -35,8 +38,11 @@ struct AddListView: View {
                         Text("Groups")
                             .font(.title2)
                         Spacer()
-                        NavigationLink {
-                            AddGroupView()
+                        Button {
+                            viewModel.currentGroup = GroupModel(name: "", order: 0, items: [], currentItems: [])
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01, execute: {
+                                navigateToAddGroup = true
+                            })
                         } label: {
                             Image(systemName: "plus")
                         }
@@ -45,7 +51,15 @@ struct AddListView: View {
                         .frame(maxWidth: .infinity)
                     ) {
                         ForEach(viewModel.currentList.groups) { group in
-                            Text(group.name)
+                            Button {
+                                
+                            } label: {
+                                HStack {
+                                    Text(group.name)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                }
+                            }
                         }
                         .onDelete { IndexSet in }
                     }

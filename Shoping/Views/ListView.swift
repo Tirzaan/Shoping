@@ -23,8 +23,8 @@ struct ListView: View {
                                 .font(.title2)
                                 .fontWeight(.semibold)
                         ) {
-                            ForEach(group.items.indices) { item in
-                                Text(group.items[item].name)
+                            ForEach(group.currentItems.indices) { item in
+                                Text(group.currentItems[item].name)
                             }
                         }
                     }

@@ -23,6 +23,8 @@ class ShopingViewModel: ObservableObject {
     
     @Published var isEditing: Bool = false
     
+    var currentGroup: GroupModel = GroupModel(name: "", order: 0, items: [], currentItems: [])
+    
     init() {
         organizeLists()
     }
@@ -46,7 +48,7 @@ class ShopingViewModel: ObservableObject {
     }
     
     func addList(list: ListModel) {
-        var groups: [GroupModel] = list.groups
+        let groups: [GroupModel] = list.groups
         let newList = ListModel(name: list.name, groups: groups)
         lists.removeAll(where: { $0.id == currentList.id })
         lists.append(newList)
@@ -63,6 +65,7 @@ class ShopingViewModel: ObservableObject {
     func addItem(group: GroupModel, item: ItemModel) {
         var newGroup: GroupModel = group
         newGroup.items.append(item)
+        currentGroup = newGroup
         organizeItems(group: group)
     }
     

@@ -11,31 +11,40 @@ struct ListView: View {
     
     @EnvironmentObject var viewModel: ShopingViewModel
     
-    @State var list: ListModel
+//    @State var list: ListModel
     
     var body: some View {
         NavigationStack {
             VStack {
                 List {
-                    ForEach(list.groups.indices) { groupIndex in
+                    ForEach(viewModel.currentList.groups) { group in
                         Section(header:
-                            Text("\(list.groups[groupIndex].name)")
+                            Text("\(group.name)")
                                 .font(.title2)
                                 .fontWeight(.semibold)
                         ) {
-                            ForEach(list.groups[groupIndex].items.indices) { item in
-                                Text(list.groups[groupIndex].items[item].name)
+                            ForEach(group.items.indices) { item in
+                                Text(group.items[item].name)
                             }
                         }
                     }
+                    Section(header:
+                        Text("Other")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                    ) {
+//                        ForEach(group.items.indices) { item in
+//                            Text(group.items[item].name)
+//                        }
+                    }
                 }
             }
-            .navigationTitle("\(list.name)")
+            .navigationTitle("\(viewModel.currentList.name)")
         }
     }
 }
 
 #Preview {
-    ListView(list: ListModel(name: "www", groups: []))
+    ListView()
         .environmentObject(ShopingViewModel())
 }

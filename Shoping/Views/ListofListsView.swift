@@ -16,12 +16,14 @@ struct ListofListsView: View {
     @State var alertMessage: String = ""
     @State var selectedList: ListModel = ListModel(name: "", groups: [])
     
-    @State var navigate: Bool = false
+    @State var navigateToList: Bool = false
+    @State var navigateToNewList: Bool = false
     
     var body: some View {
         NavigationStack {
             listofLists
-            NavigationLink("", destination: ListView(list: viewModel.currentList ?? ListModel(name: "", groups: [])), isActive: $navigate).hidden()
+            NavigationLink("", destination: ListView(list: viewModel.currentList), isActive: $navigateToList).hidden()
+            NavigationLink("", destination: AddListView(), isActive: $navigateToNewList).hidden()
             .alert(isPresented: $showAlert) { GetAlert() }
             .navigationTitle("Lists")
         }
@@ -33,14 +35,17 @@ struct ListofListsView: View {
                 Button {
                     viewModel.currentList = list
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.01, execute: {
-                        navigate = true
+                        navigateToList = true
                     })
                 } label: {
                     HStack {
                         Text(list.name)
                         Spacer()
                         Menu {
-                            NavigationLink("Edit") { Text("Editing '\(list.name)'") }
+                            Button("Edit") {
+                                viewModel.isEditing = true
+                                navigateToNewList = true
+                            }
                             Button("Delete") {
                                 deleteItemAlert(list: list)
                             }
@@ -57,8 +62,11 @@ struct ListofListsView: View {
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                NavigationLink {
-                    AddListView()
+                Button {
+                    viewModel.currentList = ListModel(name: "", groups: [])
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01, execute: {
+                        navigateToNewList = true
+                    })
                 } label: {
                     Image(systemName: "plus")
                 }

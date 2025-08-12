@@ -9,12 +9,14 @@ import SwiftUI
 
 struct AddListView: View {
     
+    @Environment(\.presentationMode) var presentationMode
+    
     @EnvironmentObject var viewModel: ShopingViewModel
     
-    @State var newList: ListModel = ListModel(name: "", groups: [
-        GroupModel(name: "A", order: 0, items: [], currentItems: []),
-        GroupModel(name: "B", order: 1, items: [], currentItems: [])
-    ])
+//    @State var viewModel.currentList: ListModel = ListModel(name: "", groups: [
+//        GroupModel(name: "A", order: 0, items: [], currentItems: []),
+//        GroupModel(name: "B", order: 1, items: [], currentItems: [])
+//    ])
     
     @State var nameInput: String = ""
     
@@ -38,7 +40,7 @@ struct AddListView: View {
                         .padding(.vertical, 2)
                         .frame(maxWidth: .infinity)
                     ) {
-                        ForEach(newList.groups) { group in
+                        ForEach(viewModel.currentList.groups) { group in
                             Text(group.name)
                         }
                         .onDelete { IndexSet in }
@@ -49,7 +51,7 @@ struct AddListView: View {
                 Button {
                     Save()
                 } label: {
-                    Text("Save")
+                    Text(viewModel.isEditing ? "Update" :"Save")
                         .foregroundStyle(.white)
                         .font(.headline)
                         .fontWeight(.semibold)
@@ -60,7 +62,7 @@ struct AddListView: View {
                 }
                 
             }
-            .navigationTitle("Add List")
+            .navigationTitle(viewModel.isEditing ? "Edit List" :"Add List")
         }
     }
 }
@@ -68,8 +70,16 @@ struct AddListView: View {
 extension AddListView {
     
     func Save() {
-        newList.name = nameInput
-        viewModel.lists.append(newList)
+        if TextisAppropriate() {
+            viewModel.currentList.name = nameInput
+            viewModel.lists.removeAll(where: { $0.id == viewModel.currentList.id })
+            viewModel.lists.append(viewModel.currentList)
+            presentationMode.wrappedValue.dismiss()
+        }
+    }
+    
+    func TextisAppropriate() -> Bool {
+        return !nameInput.isEmpty
     }
     
 }

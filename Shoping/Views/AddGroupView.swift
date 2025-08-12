@@ -9,11 +9,13 @@ import SwiftUI
 
 struct AddGroupView: View {
     
+    @EnvironmentObject var viewModel: ShopingViewModel
+    
     @State var name: String = ""
     @State var orderString: String = ""
     @State var order: Int = 0
     
-    @State var newGroup: GroupModel = GroupModel(name: "ONE", order: 0, items: [], currentItems: [])
+    @State var newGroup: GroupModel = GroupModel(name: "", order: 0, items: [], currentItems: [])
     
     var body: some View {
         NavigationStack {
@@ -49,7 +51,7 @@ struct AddGroupView: View {
                 Spacer()
                 
                 Button {
-                    
+                    Save()
                 } label: {
                     Text("Save")
                         .foregroundStyle(.white)
@@ -68,6 +70,14 @@ struct AddGroupView: View {
     }
 }
 
+extension AddGroupView {
+    func Save() {
+        newGroup.name = name
+        viewModel.addGroup(group: newGroup)
+    }
+}
+
 #Preview {
     AddGroupView()
+        .environmentObject(ShopingViewModel())
 }

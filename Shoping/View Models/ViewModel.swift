@@ -19,6 +19,22 @@ class ShopingViewModel: ObservableObject {
         ListModel(name: "Winco", groups: [GroupModel(name: "", order: 0, items: [], currentItems: [])])
     ]
     
-    @Published var currentList: ListModel? = nil
+    @Published var currentList: ListModel = ListModel(name: "", groups: [])
+    
+    @Published var isEditing: Bool = false
+    
+    func addList(list: ListModel) {
+        let newList = ListModel(name: list.name, groups: list.groups)
+        lists.append(newList)
+    }
+    
+    func addGroup(group: GroupModel) {
+        let newGroup: GroupModel = group
+        currentList.groups.append(newGroup)
+    }
+    
+    func addItem(list: ListModel) {
+        
+    }
     
 }

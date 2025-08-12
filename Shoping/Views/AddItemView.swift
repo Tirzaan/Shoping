@@ -8,11 +8,15 @@
 import SwiftUI
 
 struct AddItemView: View {
+    
+    @EnvironmentObject var viewModel: ShopingViewModel
+    
     var body: some View {
-        Text("Hello, World!")
+        
     }
 }
 
 #Preview {
     AddItemView()
+        .environmentObject(ShopingViewModel())
 }

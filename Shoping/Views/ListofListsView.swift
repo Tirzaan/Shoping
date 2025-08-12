@@ -80,6 +80,14 @@ extension ListofListsView {
             ToolbarItem(placement: .topBarLeading) {
                 EditButton()
             }
+            
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    
+                } label: {
+                    Image(systemName: "gear")
+                }
+            }
         }
     }
 }

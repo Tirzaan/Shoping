@@ -9,6 +9,6 @@ import Foundation
 
 struct ItemModel: Identifiable {
     let id: String = UUID().uuidString
-    let name: String
-    let order: Int
+    var name: String
+    var order: Int
 }

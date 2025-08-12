@@ -20,6 +20,10 @@ struct AddListView: View {
     
     @State var nameInput: String = ""
     
+    @State var alertTitle: String = ""
+    @State var alertMessage: String = ""
+    @State var showAlert: Bool = false
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -62,6 +66,7 @@ struct AddListView: View {
                 }
                 
             }
+            .alert(isPresented: $showAlert) { GetAlert() }
             .navigationTitle(viewModel.isEditing ? "Edit List" :"Add List")
         }
     }
@@ -72,15 +77,36 @@ extension AddListView {
     func Save() {
         if TextisAppropriate() {
             viewModel.currentList.name = nameInput
-            viewModel.lists.removeAll(where: { $0.id == viewModel.currentList.id })
-            viewModel.lists.append(viewModel.currentList)
+            viewModel.addList(list: viewModel.currentList)
+//            viewModel.lists.removeAll(where: { $0.id == viewModel.currentList.id })
+//            viewModel.lists.append(viewModel.currentList)
             presentationMode.wrappedValue.dismiss()
         }
     }
     
     func TextisAppropriate() -> Bool {
-        return !nameInput.isEmpty
+        if nameInput.isEmpty || nameInput == " " || nameInput == "  " || nameInput == "   " {
+            alertTitle = "Name is Empty! 🫥"
+            alertMessage = "Please enter a name for your list."
+            showAlert = true
+            return false
+        } else if nameInput.contains("") {
+            alertTitle = "Name Has inappropriates Words!"
+            alertMessage = "Please change the name of your list."
+            showAlert = true
+            return false
+        } else {
+            return true
+        }
     }
+    
+    func GetAlert() -> Alert {
+        Alert(
+            title: Text(alertTitle),
+            message: Text(alertMessage),
+        )
+    }
+
     
 }
 

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AddItemView: View {
     
+    @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var viewModel: ShopingViewModel
     
     @State var name: String = ""
@@ -55,7 +56,8 @@ struct AddItemView: View {
 extension AddItemView {
     func Save() {
         newItem.name = name
-        viewModel.addItem(group: newGroup)
+        viewModel.addItem(group: newGroup, item: newItem)
+        presentationMode.wrappedValue.dismiss()
     }
 }
 

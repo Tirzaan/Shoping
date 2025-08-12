@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AddGroupView: View {
     
+    @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var viewModel: ShopingViewModel
     
     @State var name: String = ""
@@ -74,6 +75,7 @@ extension AddGroupView {
     func Save() {
         newGroup.name = name
         viewModel.addGroup(group: newGroup)
+        presentationMode.wrappedValue.dismiss()
     }
 }
 

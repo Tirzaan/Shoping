@@ -60,7 +60,9 @@ class ShopingViewModel: ObservableObject {
         organizeGroups()
     }
     
-    func addItem(group: GroupModel) {
+    func addItem(group: GroupModel, item: ItemModel) {
+        var newGroup: GroupModel = group
+        newGroup.items.append(item)
         organizeItems(group: group)
     }
     

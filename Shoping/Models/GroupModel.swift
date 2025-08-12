@@ -7,8 +7,10 @@
 
 import Foundation
 
-struct GroupModel {
+struct GroupModel: Identifiable {
+    let id: String = UUID().uuidString
     let name: String
     let order: Int
     let items: [ItemModel]
+    let currentItems: [ItemModel]
 }

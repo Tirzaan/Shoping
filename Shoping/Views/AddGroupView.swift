@@ -64,6 +64,11 @@ struct AddGroupView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
             }
+            .onAppear {
+                name = viewModel.currentGroup.name
+                orderString = String(viewModel.currentGroup.order)
+                order = viewModel.currentGroup.order
+            }
             
             .navigationTitle(viewModel.isEditingGroup ? "Edit Group" : "Add Group")
         }

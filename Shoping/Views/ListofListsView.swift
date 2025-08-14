@@ -64,6 +64,10 @@ extension ListofListsView {
                 }
             }
             .onMove(perform: moveItem)
+            
+            Button("Add Apples to To Do") {
+                viewModel.addItemToList(item: "Apples", list: "To Do")
+            }
         }
         .onAppear {
             viewModel.isEditingList = false
@@ -73,7 +77,7 @@ extension ListofListsView {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     viewModel.currentList = ListModel(name: "", groups: [])
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01, execute: {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
                         navigateToNewList = true
                     })
                 } label: {

@@ -8,14 +8,9 @@
 import Foundation
 
 struct GroupModel: Identifiable {
+    let id = UUID().uuidString
     var name: String
     var order: Int
     var items: [ItemModel]
     var currentItems: [ItemModel]
-    
-    var id: String {
-        var idString = UUID().uuidString
-        idString = idString + name + "\(order)" + items.description
-        return idString
-    }
 }

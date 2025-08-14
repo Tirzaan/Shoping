@@ -8,12 +8,7 @@
 import Foundation
 
 struct ListModel: Identifiable {
+    let id = UUID().uuidString
     var name: String
     var groups: [GroupModel]
-    
-    var id: String {
-        var idString = UUID().uuidString
-        idString = idString + name + groups.description
-        return idString
-    }
 }

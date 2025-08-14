@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AppIntents
 
 @main
 struct ShopingApp: App {
@@ -17,5 +18,8 @@ struct ShopingApp: App {
             ListofListsView()
                 .environmentObject(viewModel)
         }
+//        .commands {
+//            MyAppShortcuts()
+//        }
     }
 }

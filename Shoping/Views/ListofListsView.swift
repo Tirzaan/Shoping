@@ -65,8 +65,8 @@ extension ListofListsView {
             }
             .onMove(perform: moveItem)
             
-            Button("Add Apples to To Do") {
-                viewModel.addItemToList(item: "Apples", list: "To Do")
+            Button("Add Apples to Test") {
+                viewModel.addItemToList(item: "Apples", list: "Test")
             }
         }
         .onAppear {

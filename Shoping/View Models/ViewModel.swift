@@ -28,6 +28,8 @@ class ShopingViewModel: ObservableObject {
     
     var currentGroup: GroupModel = GroupModel(name: "", order: 0, items: [], currentItems: [])
     
+    let otherGroup: GroupModel = GroupModel(name: "Other", order: 0, items: [], currentItems: [])
+    
     init() {
         organizeLists()
     }
@@ -51,7 +53,10 @@ class ShopingViewModel: ObservableObject {
     }
     
     func addList(list: ListModel) {
-        let groups: [GroupModel] = list.groups
+        var groups: [GroupModel] = list.groups
+        if !groups.contains(where: { $0.name == otherGroup.name }) {
+            groups.append(otherGroup)
+        }
         let newList = ListModel(name: list.name, groups: groups)
         lists.removeAll(where: { $0.id == currentList.id })
         lists.append(newList)
@@ -83,54 +88,34 @@ class ShopingViewModel: ObservableObject {
             return
         }
         
-        var addingItem = ItemModel(name: item, order: 0)
+        let addingItem = ItemModel(name: item, order: 0)
         guard var addingList: ListModel = lists.first(where: { $0.name == list }) else {
             print("List does not exist 🫥")
             return
         }
         
-        
         addingList.groups.forEach { group in
             
-            
+            if group.items.contains(where: { $0.name == item }) {
                 
-                if group.items.contains(where: { $0.name == item }) {
+                if let groupIndex: Int = addingList.groups.firstIndex(where: { $0.name == group.name }) {
+                    print("Put Item in \(group.name)")
+                    addingList.groups[groupIndex].currentItems.append(addingItem)
                     
-                    if let groupIndex: Int = addingList.groups.firstIndex(where: { $0.name == group.name }) {
-                        print("Put Item in \(group.name)")
-                        addingList.groups[groupIndex].currentItems.append(addingItem)
-                        if let listIndex: Int = lists.firstIndex(where: { $0.name == list }) {
-                            lists[listIndex] = addingList
-                        }
+                    if let listIndex: Int = lists.firstIndex(where: { $0.name == list }) {
+                        lists[listIndex] = addingList
+                    }
+                } else if let otherGroupIndex = addingList.groups.firstIndex(where: { $0.name == "Other" }) {
+                    print("Put Item in \(group.name)")
+                    addingList.groups[otherGroupIndex].currentItems.append(addingItem)
+                    if let listIndex: Int = lists.firstIndex(where: { $0.name == list }) {
+                        lists[listIndex] = addingList
                     } else {
                         print("ERROR: Group \(group.name) does not exist")
                     }
                     
-                } else {
-                    
-                    if let otherGroupIndex: Int = addingList.groups.firstIndex(where: { $0.name == "Other" }) {
-                        print("Put Item in \(group.name)")
-                        addingList.groups[otherGroupIndex].currentItems.append(addingItem)
-                    } else {
-                        print("ERROR: Group Other does not exist")
-                    }
-                
-//                    if var otherGroup: GroupModel = addingList.groups.last {
-//                        print("Put Item in Other")
-//                        otherGroup.currentItems.append(addingItem)
-//                         //.currentItems.append(addingItem)
-//                    } else {
-//                        print("ERROR: Group Other does not exist")
-//                    }
-                    
                 }
+            }
         }
-        
     }
-    
 }
-
-
-//                    print("Put Item in \(group.name)")
-//                    addingGroup.currentItems.append(addingItem)
-//                    addingList.groups.first(where: { $0.name == group.name })!.currentItems.append(addingItem)

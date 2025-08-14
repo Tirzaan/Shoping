@@ -28,15 +28,15 @@ struct ListView: View {
                             }
                         }
                     }
-                    Section(header:
-                        Text("Other")
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                    ) {
+//                    Section(header:
+//                        Text("Other")
+//                            .font(.title2)
+//                            .fontWeight(.semibold)
+//                    ) {
 //                        ForEach(group.items.indices) { item in
 //                            Text(group.items[item].name)
 //                        }
-                    }
+//                    }
                 }
             }
             .navigationTitle("\(viewModel.currentList.name)")

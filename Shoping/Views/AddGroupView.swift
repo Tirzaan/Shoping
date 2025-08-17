@@ -12,9 +12,11 @@ struct AddGroupView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var viewModel: ShopingViewModel
     
-    @State var name: String = ""
-    @State var orderString: String = ""
-    @State var order: Int = 0
+    @State var itemName: String = ""
+    @State var itemOrderString: String = ""
+    @State var itemOrder: String = ""
+    
+    @State var showItem: Bool = false
     
 //    @State var newGroup: GroupModel = GroupModel(name: "", order: 0, items: [], currentItems: [])
     
@@ -22,14 +24,14 @@ struct AddGroupView: View {
         NavigationStack {
             VStack {
                 List {
-                    TextField("name", text: $name)
+                    TextField("name", text: $viewModel.currentGroup.name)
                     Section(header:
                                 HStack {
                         Text("Items")
                             .font(.title2)
                         Spacer()
-                        NavigationLink {
-                            AddItemView()
+                        Button {
+                            showItem = true
                         } label: {
                             Image(systemName: "plus")
                         }
@@ -38,16 +40,25 @@ struct AddGroupView: View {
                         .frame(maxWidth: .infinity)
                     ) {
                         ForEach(viewModel.currentGroup.items) { item in
-                            Text(item.name)
-                        }
-                    }
-                    TextField("Order", text: $orderString)
-                        .keyboardType(.numberPad)
-                        .onSubmit {
-                            if let order = Int(orderString) {
-                                self.order = order
+                            HStack {
+                                Text(item.name)
+                                    .font(.headline)
+                                Spacer()
+                                Text("\(item.order)")
+                                    .font(.headline)
                             }
                         }
+                    }
+                    TextField("Order", text: $viewModel.currentGroupOrderString)
+                        .keyboardType(.numberPad)
+                        .onSubmit {
+                            if let order = Int(viewModel.currentGroupOrderString) {
+                                viewModel.currentGroupOrder = order
+                            }
+                        }
+                }
+                .sheet(isPresented: $showItem) {
+                    AddItemView()
                 }
                 Spacer()
                 
@@ -64,11 +75,6 @@ struct AddGroupView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
             }
-            .onAppear {
-                name = viewModel.currentGroup.name
-                orderString = String(viewModel.currentGroup.order)
-                order = viewModel.currentGroup.order
-            }
             
             .navigationTitle(viewModel.isEditingGroup ? "Edit Group" : "Add Group")
         }
@@ -77,8 +83,17 @@ struct AddGroupView: View {
 }
 
 extension AddGroupView {
+    var ItemView: some View {
+        HStack {
+            TextField("Enter Item Name...", text: $itemName)
+            TextField("0", text: $itemOrderString)
+                .keyboardType(.numberPad)
+        }
+    }
+}
+
+extension AddGroupView {
     func Save() {
-        viewModel.currentGroup.name = name
         viewModel.addGroup(group: viewModel.currentGroup)
         presentationMode.wrappedValue.dismiss()
     }

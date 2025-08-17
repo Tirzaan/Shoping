@@ -9,42 +9,82 @@ import Foundation
 
 class ShopingViewModel: ObservableObject {
     
-    @Published var lists: [ListModel] = [
-        ListModel(name: "To Do", groups: [GroupModel(name: "Shopping", order: 0, items: [
-            ItemModel(name: "Apples", order: 0)
-        ], currentItems: [])]),
-        ListModel(name: "Grossery", groups: [
-            GroupModel(name: "Veggies", order: 1, items: [], currentItems: []),
-            GroupModel(name: "tytyt", order: 1, items: [], currentItems: []),
-            GroupModel(name: "Meat", order: 2, items: [], currentItems: [])
-        ]),
-        ListModel(name: "Winco", groups: [GroupModel(name: "", order: 0, items: [], currentItems: [])])
-    ]
+    @Published var lists: [ListModel] = []
     
     @Published var currentList: ListModel = ListModel(name: "", groups: [])
+    @Published var currentGroupOrderString: String = "0"
+    @Published var currentGroupOrder: Int = 0
     
     @Published var isEditingList: Bool = false
     @Published var isEditingGroup: Bool = false
     
-    var currentGroup: GroupModel = GroupModel(name: "", order: 0, items: [], currentItems: [])
+    @Published var currentGroup: GroupModel = GroupModel(name: "", order: 0, items: [], currentItems: [])
     
     let otherGroup: GroupModel = GroupModel(name: "Other", order: 0, items: [], currentItems: [])
+    
+    enum ListSortOptions {
+        case sortByName
+        case sortByOrder
+        case sortByQuantity
+        case sortByLastUpdated
+        case sortByCreationDate
+    }
+    
+    enum GroupSortOptions {
+        case sortByName
+        case sortByOrder
+        case sortByQuantity
+        case sortByLastUpdated
+        case sortByCreationDate
+    }
+    
+    enum ItemSortOptions {
+        case sortByName
+        case sortByOrder
+        case sortByQuantity
+        case sortByLastUpdated
+        case sortByCreationDate
+    }
+    
     
     init() {
         organizeLists()
     }
     
     func organizeLists() {
+//        let sortOptions: ListSortOptions = .sortByName
+//        
+//        switch sortOptions {
+//            case .sortByName:
+//
+//            case .sortByOrder:
+//                print("")
+//            case .sortByQuantity:
+//                print("")
+//            case .sortByLastUpdated:
+//                print("")
+//            case .sortByCreationDate:
+//                print("")
+//            
+//        }
+        
         lists.sort { $0.name < $1.name }
+        
     }
     
     func organizeGroups() {
+        guard let otherGroup = currentList.groups.first(where: { $0.name == otherGroup.name }) else { return }
         currentList.groups.sort { $0.order < $1.order }
+        if let index = currentList.groups.firstIndex(of: otherGroup) {
+            currentList.groups.move(fromOffsets: IndexSet([index]), toOffset: currentList.groups.count)
+            print("Moving '\(otherGroup.name)' to end (\(currentList.groups.count))")
+            print("\(index)")
+        }
+        
     }
     
-    func organizeItems(group: GroupModel) {
-        var currentgroup = group
-        currentgroup.items.sort { $0.order < $1.order }
+    func organizeItems() {
+        currentGroup.items.sort { $0.order < $1.order }
     }
     
     func organizeCurrentItems(group: GroupModel) {
@@ -71,11 +111,11 @@ class ShopingViewModel: ObservableObject {
         organizeGroups()
     }
     
-    func addItem(group: GroupModel, item: ItemModel) {
-        var newGroup: GroupModel = group
-        newGroup.items.append(item)
-        currentGroup = newGroup
-        organizeItems(group: group)
+    func addItem(item: ItemModel) {
+        var group = currentGroup
+        group.items.append(item)
+        currentGroup = group
+        organizeItems()
     }
     
     func addItemToList(item: String, list: String) {

@@ -5,9 +5,13 @@
 //  Created by Tirzaan on 8/13/25.
 //
 
+import SwiftUI
 import AppIntents
 
 struct AddItemToListIntent: AppIntent {
+    
+//    @EnvironmentObject var viewModel: ShopingViewModel
+    
     static var title: LocalizedStringResource = "Add Item to List"
     
     static var description = IntentDescription(
@@ -28,6 +32,7 @@ struct AddItemToListIntent: AppIntent {
         let list = parts.count > 1 ? parts[1] : "Default List"
         
         print("Adding '\(item)' to '\(list)'")
+//        viewModel.addItemToList(item: item, list: list)
         return .result(value: "Added \(item) to \(list).")
     }
     

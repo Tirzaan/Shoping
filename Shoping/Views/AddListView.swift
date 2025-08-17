@@ -13,13 +13,6 @@ struct AddListView: View {
     
     @EnvironmentObject var viewModel: ShopingViewModel
     
-//    @State var viewModel.currentList: ListModel = ListModel(name: "", groups: [
-//        GroupModel(name: "A", order: 0, items: [], currentItems: []),
-//        GroupModel(name: "B", order: 1, items: [], currentItems: [])
-//    ])
-    
-    @State var nameInput: String = ""
-    
     @State var alertTitle: String = ""
     @State var alertMessage: String = ""
     @State var showAlert: Bool = false
@@ -31,7 +24,7 @@ struct AddListView: View {
             NavigationLink("", destination: AddGroupView(), isActive: $navigateToAddGroup).hidden()
             VStack {
                 List {
-                    TextField("name", text: $nameInput)
+                    TextField("name", text: $viewModel.currentList.name)
                     
                     Section(header:
                                 HStack {
@@ -85,6 +78,7 @@ struct AddListView: View {
                 
             }
             .alert(isPresented: $showAlert) { GetAlert() }
+            
             .navigationTitle(viewModel.isEditingList ? "Edit List" :"Add List")
         }
     }
@@ -94,21 +88,19 @@ extension AddListView {
     
     func Save() {
         if TextisAppropriate() {
-            viewModel.currentList.name = nameInput
+            viewModel.currentList.name = viewModel.currentList.name
             viewModel.addList(list: viewModel.currentList)
-//            viewModel.lists.removeAll(where: { $0.id == viewModel.currentList.id })
-//            viewModel.lists.append(viewModel.currentList)
             presentationMode.wrappedValue.dismiss()
         }
     }
     
     func TextisAppropriate() -> Bool {
-        if nameInput.isEmpty || nameInput == " " || nameInput == "  " || nameInput == "   " {
+        if viewModel.currentList.name.isEmpty || viewModel.currentList.name == " " || viewModel.currentList.name == "  " || viewModel.currentList.name == "   " {
             alertTitle = "Name is Empty! 🫥"
             alertMessage = "Please enter a name for your list."
             showAlert = true
             return false
-        } else if nameInput.contains("") {
+        } else if viewModel.currentList.name.contains("") {
             alertTitle = "Name Has inappropriates Words!"
             alertMessage = "Please change the name of your list."
             showAlert = true

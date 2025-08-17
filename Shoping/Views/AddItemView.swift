@@ -55,8 +55,12 @@ struct AddItemView: View {
 
 extension AddItemView {
     func Save() {
+        if let order = Int(orderString) {
+            self.order = order
+        }
         newItem.name = name
-        viewModel.addItem(group: viewModel.currentGroup, item: newItem)
+        newItem.order = order
+        viewModel.addItem(item: newItem)
         presentationMode.wrappedValue.dismiss()
     }
 }
